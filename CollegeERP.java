@@ -37,6 +37,7 @@ public class CollegeERP extends JFrame {
         tabbedPane.addTab("Faculty", createFacultyPanel());
         tabbedPane.addTab("Courses", createCoursePanel());
         tabbedPane.addTab("Admissions & Exams", createAdmissionsExamsPanel());
+        tabbedPane.addTab("Statistics", createStatisticsPanel());
 
         add(tabbedPane, BorderLayout.CENTER);
         
@@ -252,6 +253,73 @@ public class CollegeERP extends JFrame {
         
         panel.add(admissionPanel);
         panel.add(examPanel);
+        return panel;
+    }
+
+    private JPanel createStatisticsPanel() {
+        JPanel panel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                
+                int width = getWidth();
+                int height = getHeight();
+                
+                // Draw background
+                g2d.setColor(Color.WHITE);
+                g2d.fillRect(0, 0, width, height);
+                
+                // Title
+                g2d.setColor(Color.BLACK);
+                g2d.setFont(new Font("Segoe UI", Font.BOLD, 24));
+                g2d.drawString("College Statistics", width / 2 - 100, 40);
+                
+                // Data
+                int totalStudents = students.size();
+                int totalFaculties = faculties.size();
+                int totalCourses = courses.size();
+                
+                int max = Math.max(totalStudents, Math.max(totalFaculties, totalCourses));
+                if (max == 0) max = 1;
+                
+                int barWidth = 80;
+                int gap = 60;
+                int startX = (width - (3 * barWidth + 2 * gap)) / 2;
+                int baseY = height - 80;
+                
+                // Students Bar
+                int studentHeight = (int) ((double) totalStudents / max * 300);
+                g2d.setColor(new Color(52, 152, 219)); // Blue
+                g2d.fillRect(startX, baseY - studentHeight, barWidth, studentHeight);
+                g2d.setColor(Color.BLACK);
+                g2d.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+                g2d.drawString("Students (" + totalStudents + ")", startX, baseY + 20);
+                
+                // Faculties Bar
+                int facultyHeight = (int) ((double) totalFaculties / max * 300);
+                g2d.setColor(new Color(46, 204, 113)); // Green
+                g2d.fillRect(startX + barWidth + gap, baseY - facultyHeight, barWidth, facultyHeight);
+                g2d.setColor(Color.BLACK);
+                g2d.drawString("Faculty (" + totalFaculties + ")", startX + barWidth + gap, baseY + 20);
+                
+                // Courses Bar
+                int courseHeight = (int) ((double) totalCourses / max * 300);
+                g2d.setColor(new Color(231, 76, 60)); // Red
+                g2d.fillRect(startX + 2 * (barWidth + gap), baseY - courseHeight, barWidth, courseHeight);
+                g2d.setColor(Color.BLACK);
+                g2d.drawString("Courses (" + totalCourses + ")", startX + 2 * (barWidth + gap), baseY + 20);
+            }
+        };
+        // Add a button to refresh graphics
+        panel.setLayout(new BorderLayout());
+        JButton refreshBtn = new JButton("Refresh Chart");
+        refreshBtn.addActionListener(e -> panel.repaint());
+        JPanel bottom = new JPanel();
+        bottom.add(refreshBtn);
+        panel.add(bottom, BorderLayout.SOUTH);
+        
         return panel;
     }
 
