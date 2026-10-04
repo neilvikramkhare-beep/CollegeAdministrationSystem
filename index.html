@@ -8,20 +8,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            dark: '#0f172a',
-                            primary: '#1e3a8a',
-                            secondary: '#3b82f6',
-                            light: '#e0f2fe'
-                        }
-                    }
-                }
-            }
-        }
+        tailwind.config = { theme: { extend: { colors: { brand: { dark: '#0f172a', primary: '#1e3a8a', secondary: '#3b82f6', light: '#e0f2fe' } } } } }
     </script>
     <style>
         .section-view { display: none; }
@@ -31,16 +18,17 @@
     </style>
 </head>
 <body class="bg-gray-100 flex h-screen overflow-hidden font-sans">
-
-    <!-- Sidebar -->
-    <aside class="w-64 bg-brand-dark text-white flex flex-col shadow-xl z-20">
-        <div class="flex items-center justify-center h-20 border-b border-gray-700">
+    <aside class="w-64 bg-brand-dark text-white flex flex-col shadow-xl z-20 overflow-y-auto">
+        <div class="flex items-center justify-center h-20 border-b border-gray-700 shrink-0">
             <i class="fas fa-university text-3xl text-brand-secondary mr-3"></i>
             <h1 class="text-xl font-bold uppercase tracking-wider">EduManage</h1>
         </div>
         <nav class="flex-1 px-4 py-6 space-y-2">
-            <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center px-4 py-3 bg-brand-primary rounded-lg text-left transition-colors">
+            <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center px-4 py-3 hover:bg-gray-800 rounded-lg text-left transition-colors">
                 <i class="fas fa-chart-pie w-6"></i> Dashboard
+            </button>
+            <button onclick="navigate('colleges')" id="nav-colleges" class="nav-btn w-full flex items-center px-4 py-3 hover:bg-gray-800 rounded-lg text-left transition-colors">
+                <i class="fas fa-building w-6"></i> Colleges
             </button>
             <button onclick="navigate('students')" id="nav-students" class="nav-btn w-full flex items-center px-4 py-3 hover:bg-gray-800 rounded-lg text-left transition-colors">
                 <i class="fas fa-user-graduate w-6"></i> Students
@@ -48,120 +36,119 @@
             <button onclick="navigate('courses')" id="nav-courses" class="nav-btn w-full flex items-center px-4 py-3 hover:bg-gray-800 rounded-lg text-left transition-colors">
                 <i class="fas fa-book-open w-6"></i> Courses
             </button>
+            <button onclick="navigate('faculty')" id="nav-faculty" class="nav-btn w-full flex items-center px-4 py-3 hover:bg-gray-800 rounded-lg text-left transition-colors">
+                <i class="fas fa-chalkboard-teacher w-6"></i> Faculty
+            </button>
+            <button onclick="navigate('admissions')" id="nav-admissions" class="nav-btn w-full flex items-center px-4 py-3 hover:bg-gray-800 rounded-lg text-left transition-colors">
+                <i class="fas fa-file-signature w-6"></i> Admissions
+            </button>
+            <button onclick="navigate('attendances')" id="nav-attendances" class="nav-btn w-full flex items-center px-4 py-3 hover:bg-gray-800 rounded-lg text-left transition-colors">
+                <i class="fas fa-calendar-check w-6"></i> Attendances
+            </button>
+            <button onclick="navigate('examinations')" id="nav-examinations" class="nav-btn w-full flex items-center px-4 py-3 hover:bg-gray-800 rounded-lg text-left transition-colors">
+                <i class="fas fa-file-alt w-6"></i> Examinations
+            </button>
+            <button onclick="navigate('reviews')" id="nav-reviews" class="nav-btn w-full flex items-center px-4 py-3 hover:bg-gray-800 rounded-lg text-left transition-colors">
+                <i class="fas fa-star w-6"></i> Reviews
+            </button>
+            <button onclick="navigate('syllabuses')" id="nav-syllabuses" class="nav-btn w-full flex items-center px-4 py-3 hover:bg-gray-800 rounded-lg text-left transition-colors">
+                <i class="fas fa-book w-6"></i> Syllabuses
+            </button>
+            <button onclick="navigate('timetables')" id="nav-timetables" class="nav-btn w-full flex items-center px-4 py-3 hover:bg-gray-800 rounded-lg text-left transition-colors">
+                <i class="fas fa-clock w-6"></i> Timetables
+            </button>
         </nav>
-        <div class="p-4 border-t border-gray-700 text-sm text-gray-400">
-            <p>&copy; 2026 EduManage System</p>
-        </div>
     </aside>
-
-    <!-- Main Content -->
     <main class="flex-1 flex flex-col h-screen overflow-hidden">
-        <!-- Top Header -->
-        <header class="h-20 bg-white shadow-sm flex items-center justify-between px-8 z-10">
+        <header class="h-20 bg-white shadow-sm flex items-center justify-between px-8 z-10 shrink-0">
             <h2 id="page-title" class="text-2xl font-semibold text-gray-800">Overview Dashboard</h2>
             <div class="flex items-center space-x-4">
                 <div id="connection-status" class="text-sm font-bold text-gray-500">Checking connection...</div>
                 <button onclick="refreshData()" class="p-2 text-gray-400 hover:text-brand-secondary transition-colors" title="Refresh Data">
                     <i class="fas fa-sync-alt"></i>
                 </button>
-                <div class="h-10 w-10 rounded-full bg-brand-secondary flex items-center justify-center text-white font-bold shadow-md">
-                    <i class="fas fa-user"></i>
-                </div>
             </div>
         </header>
-
-        <!-- Scrollable Content Area -->
         <div class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-8">
-            
-            <!-- Connection Error Warning -->
             <div id="error-banner" class="hidden bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
                 <p class="font-bold">Backend Connection Failed</p>
-                <p>Could not connect to the Java backend. Please make sure your Spring Boot application is running on port 8080 and you are accessing this page via <a href="http://localhost:8080/" class="underline font-bold">http://localhost:8080/</a> instead of double-clicking the file.</p>
+                <p>Could not connect to the Java backend.</p>
             </div>
-
-            <!-- DASHBOARD SECTION -->
+            
             <div id="dashboard" class="section-view active space-y-6">
-                <!-- Stats Row -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex items-center">
-                        <div class="p-4 rounded-full bg-blue-100 text-blue-600 mr-4">
-                            <i class="fas fa-users text-2xl"></i>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-500 font-medium">Total Enrolled</p>
-                            <p id="stat-students" class="text-3xl font-bold text-gray-800">0</p>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex items-center">
-                        <div class="p-4 rounded-full bg-green-100 text-green-600 mr-4">
-                            <i class="fas fa-book text-2xl"></i>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-500 font-medium">Active Courses</p>
-                            <p id="stat-courses" class="text-3xl font-bold text-gray-800">0</p>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex items-center">
-                        <div class="p-4 rounded-full bg-purple-100 text-purple-600 mr-4">
-                            <i class="fas fa-server text-2xl"></i>
-                        </div>
                         <div>
                             <p class="text-sm text-gray-500 font-medium">Database Status</p>
                             <p id="db-status" class="text-2xl font-bold text-green-500">Online</p>
                         </div>
                     </div>
                 </div>
-
-                <!-- Charts Row -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                        <h3 class="text-lg font-bold text-gray-800 mb-4">Student Age Demographics</h3>
-                        <canvas id="ageChart" class="w-full h-64"></canvas>
+                
+                <div class="mt-8 bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">College Operations Dashboard</h3>
+                    <div class="flex flex-wrap gap-4">
+                        <button onclick="runOp('addDepartment')" class="bg-indigo-500 text-white px-4 py-2 rounded shadow">Add Department (test)</button>
+                        <button onclick="runOp('addFaculty')" class="bg-indigo-500 text-white px-4 py-2 rounded shadow">Add Faculty (test)</button>
+                        <button onclick="runOp('addStudent')" class="bg-indigo-500 text-white px-4 py-2 rounded shadow">Add Student (test)</button>
+                        <button onclick="runOp('addCourse')" class="bg-indigo-500 text-white px-4 py-2 rounded shadow">Add Course (test)</button>
                     </div>
-                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                        <h3 class="text-lg font-bold text-gray-800 mb-4">Course Credits Distribution</h3>
-                        <canvas id="creditsChart" class="w-full h-64"></canvas>
-                    </div>
+                    <p class="text-sm text-gray-500 mt-4 italic">Check the Java console to see the output from these operations!</p>
                 </div>
             </div>
 
-            <!-- STUDENTS SECTION -->
-            <div id="students" class="section-view">
+            <!-- COLLEGE SECTION -->
+            <div id="colleges" class="section-view">
                 <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-xl font-bold text-gray-800">Student Directory</h3>
-                    <button onclick="openModal('student-modal')" class="bg-brand-secondary hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow-sm transition-colors font-medium flex items-center">
-                        <i class="fas fa-plus mr-2"></i> Add Student
+                    <h3 class="text-xl font-bold text-gray-800">College Directory</h3>
+                    <button onclick="openModal('colleges-modal')" class="bg-brand-secondary hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow-sm transition-colors font-medium flex items-center">
+                        <i class="fas fa-plus mr-2"></i> Add College
                     </button>
                 </div>
-                
                 <div class="bg-white shadow-sm rounded-xl border border-gray-100 overflow-hidden">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
-                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student Name</th>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Established</th>
+                            </tr>
+                        </thead>
+                        <tbody id="colleges-table-body" class="bg-white divide-y divide-gray-200"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- STUDENT SECTION -->
+            <div id="students" class="section-view">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold text-gray-800">Student Directory</h3>
+                    <button onclick="openModal('students-modal')" class="bg-brand-secondary hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow-sm transition-colors font-medium flex items-center">
+                        <i class="fas fa-plus mr-2"></i> Add Student
+                    </button>
+                </div>
+                <div class="bg-white shadow-sm rounded-xl border border-gray-100 overflow-hidden">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                                 <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Age</th>
                                 <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Enrolled Courses</th>
                             </tr>
                         </thead>
-                        <tbody id="students-table-body" class="bg-white divide-y divide-gray-200">
-                            <!-- Populated by JS -->
-                        </tbody>
+                        <tbody id="students-table-body" class="bg-white divide-y divide-gray-200"></tbody>
                     </table>
-                    <div id="students-empty" class="hidden p-8 text-center text-gray-500">
-                        No students found. Add one to get started.
-                    </div>
                 </div>
             </div>
 
-            <!-- COURSES SECTION -->
+            <!-- COURSE SECTION -->
             <div id="courses" class="section-view">
                 <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-xl font-bold text-gray-800">Course Catalog</h3>
-                    <button onclick="openModal('course-modal')" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow-sm transition-colors font-medium flex items-center">
+                    <h3 class="text-xl font-bold text-gray-800">Course Directory</h3>
+                    <button onclick="openModal('courses-modal')" class="bg-brand-secondary hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow-sm transition-colors font-medium flex items-center">
                         <i class="fas fa-plus mr-2"></i> Add Course
                     </button>
                 </div>
-                
                 <div class="bg-white shadow-sm rounded-xl border border-gray-100 overflow-hidden">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
@@ -171,336 +158,630 @@
                                 <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Credits</th>
                             </tr>
                         </thead>
-                        <tbody id="courses-table-body" class="bg-white divide-y divide-gray-200">
-                            <!-- Populated by JS -->
-                        </tbody>
+                        <tbody id="courses-table-body" class="bg-white divide-y divide-gray-200"></tbody>
                     </table>
-                    <div id="courses-empty" class="hidden p-8 text-center text-gray-500">
-                        No courses found. Add one to get started.
-                    </div>
+                </div>
+            </div>
+
+            <!-- FACULTY SECTION -->
+            <div id="faculty" class="section-view">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold text-gray-800">Faculty Directory</h3>
+                    <button onclick="openModal('faculty-modal')" class="bg-brand-secondary hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow-sm transition-colors font-medium flex items-center">
+                        <i class="fas fa-plus mr-2"></i> Add Faculty
+                    </button>
+                </div>
+                <div class="bg-white shadow-sm rounded-xl border border-gray-100 overflow-hidden">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Age</th>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Designation</th>
+                            </tr>
+                        </thead>
+                        <tbody id="faculty-table-body" class="bg-white divide-y divide-gray-200"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ADMISSION SECTION -->
+            <div id="admissions" class="section-view">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold text-gray-800">Admission Directory</h3>
+                    <button onclick="openModal('admissions-modal')" class="bg-brand-secondary hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow-sm transition-colors font-medium flex items-center">
+                        <i class="fas fa-plus mr-2"></i> Add Admission
+                    </button>
+                </div>
+                <div class="bg-white shadow-sm rounded-xl border border-gray-100 overflow-hidden">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Age</th>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Roll No</th>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Semester</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admissions-table-body" class="bg-white divide-y divide-gray-200"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ATTENDANCE SECTION -->
+            <div id="attendances" class="section-view">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold text-gray-800">Attendance Directory</h3>
+                    <button onclick="openModal('attendances-modal')" class="bg-brand-secondary hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow-sm transition-colors font-medium flex items-center">
+                        <i class="fas fa-plus mr-2"></i> Add Attendance
+                    </button>
+                </div>
+                <div class="bg-white shadow-sm rounded-xl border border-gray-100 overflow-hidden">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Roll</th>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Year</th>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Attendance %</th>
+                            </tr>
+                        </thead>
+                        <tbody id="attendances-table-body" class="bg-white divide-y divide-gray-200"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- EXAMINATION SECTION -->
+            <div id="examinations" class="section-view">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold text-gray-800">Examination Directory</h3>
+                    <button onclick="openModal('examinations-modal')" class="bg-brand-secondary hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow-sm transition-colors font-medium flex items-center">
+                        <i class="fas fa-plus mr-2"></i> Add Examination
+                    </button>
+                </div>
+                <div class="bg-white shadow-sm rounded-xl border border-gray-100 overflow-hidden">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Roll</th>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subjects</th>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Marks</th>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Exam Name</th>
+                            </tr>
+                        </thead>
+                        <tbody id="examinations-table-body" class="bg-white divide-y divide-gray-200"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- REVIEW SECTION -->
+            <div id="reviews" class="section-view">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold text-gray-800">Review Directory</h3>
+                    <button onclick="openModal('reviews-modal')" class="bg-brand-secondary hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow-sm transition-colors font-medium flex items-center">
+                        <i class="fas fa-plus mr-2"></i> Add Review
+                    </button>
+                </div>
+                <div class="bg-white shadow-sm rounded-xl border border-gray-100 overflow-hidden">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Year</th>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Review</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reviews-table-body" class="bg-white divide-y divide-gray-200"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SYLLABUS SECTION -->
+            <div id="syllabuses" class="section-view">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold text-gray-800">Syllabus Directory</h3>
+                    <button onclick="openModal('syllabuses-modal')" class="bg-brand-secondary hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow-sm transition-colors font-medium flex items-center">
+                        <i class="fas fa-plus mr-2"></i> Add Syllabus
+                    </button>
+                </div>
+                <div class="bg-white shadow-sm rounded-xl border border-gray-100 overflow-hidden">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subjects</th>
+                            </tr>
+                        </thead>
+                        <tbody id="syllabuses-table-body" class="bg-white divide-y divide-gray-200"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TIMETABLE SECTION -->
+            <div id="timetables" class="section-view">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold text-gray-800">Timetable Directory</h3>
+                    <button onclick="openModal('timetables-modal')" class="bg-brand-secondary hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow-sm transition-colors font-medium flex items-center">
+                        <i class="fas fa-plus mr-2"></i> Add Timetable
+                    </button>
+                </div>
+                <div class="bg-white shadow-sm rounded-xl border border-gray-100 overflow-hidden">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Course Name</th>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Course ID</th>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Faculty</th>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Day</th>
+                            </tr>
+                        </thead>
+                        <tbody id="timetables-table-body" class="bg-white divide-y divide-gray-200"></tbody>
+                    </table>
                 </div>
             </div>
 
         </div>
     </main>
 
-    <!-- Student Modal -->
-    <div id="student-modal" class="modal fixed inset-0 z-50 bg-gray-900 bg-opacity-50 items-center justify-center backdrop-blur-sm transition-opacity">
+    <!-- College Modal -->
+    <div id="colleges-modal" class="modal fixed inset-0 z-50 bg-gray-900 bg-opacity-50 items-center justify-center backdrop-blur-sm transition-opacity">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all">
             <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex justify-between items-center">
-                <h3 class="text-lg font-bold text-gray-800">Add New Student</h3>
-                <button onclick="closeModal('student-modal')" class="text-gray-400 hover:text-gray-600">
-                    <i class="fas fa-times text-xl"></i>
-                </button>
+                <h3 class="text-lg font-bold text-gray-800">Add College</h3>
+                <button onclick="closeModal('colleges-modal')" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times text-xl"></i></button>
             </div>
-            <form id="student-form" onsubmit="submitStudent(event)" class="p-6 space-y-4">
-                <div id="student-form-error" class="hidden text-red-500 text-sm font-bold"></div>
+            <form id="colleges-form" onsubmit="submitForm(event, 'colleges')" class="p-6 space-y-4">
+                <div id="colleges-form-error" class="hidden text-red-500 text-sm font-bold"></div>
+
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                    <input type="text" id="s-name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-secondary focus:border-brand-secondary outline-none transition-all">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">name</label>
+                    <input type="text" id="colleges-name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none">
                 </div>
+
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Age</label>
-                    <input type="number" id="s-age" required min="16" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-secondary focus:border-brand-secondary outline-none transition-all">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">location</label>
+                    <input type="text" id="colleges-location" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none">
                 </div>
+
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Enrolled Courses (Comma separated)</label>
-                    <input type="text" id="s-courses" required placeholder="e.g. MATH-101, CS-204" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-secondary focus:border-brand-secondary outline-none transition-all">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">establishedYear</label>
+                    <input type="number" id="colleges-establishedYear" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none">
                 </div>
+
                 <div class="pt-4 flex justify-end space-x-3">
-                    <button type="button" onclick="closeModal('student-modal')" class="px-4 py-2 text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition-colors">Cancel</button>
-                    <button type="submit" class="px-4 py-2 text-white bg-brand-secondary hover:bg-blue-600 rounded-lg font-medium transition-colors">Save Student</button>
+                    <button type="button" onclick="closeModal('colleges-modal')" class="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg">Cancel</button>
+                    <button type="submit" class="px-4 py-2 text-white bg-brand-secondary rounded-lg">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Student Modal -->
+    <div id="students-modal" class="modal fixed inset-0 z-50 bg-gray-900 bg-opacity-50 items-center justify-center backdrop-blur-sm transition-opacity">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all">
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-gray-800">Add Student</h3>
+                <button onclick="closeModal('students-modal')" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <form id="students-form" onsubmit="submitForm(event, 'students')" class="p-6 space-y-4">
+                <div id="students-form-error" class="hidden text-red-500 text-sm font-bold"></div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">name</label>
+                    <input type="text" id="students-name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">age</label>
+                    <input type="number" id="students-age" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">enrolledCourses</label>
+                    <input type="text" id="students-enrolledCourses" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none">
+                </div>
+
+                <div class="pt-4 flex justify-end space-x-3">
+                    <button type="button" onclick="closeModal('students-modal')" class="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg">Cancel</button>
+                    <button type="submit" class="px-4 py-2 text-white bg-brand-secondary rounded-lg">Save</button>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- Course Modal -->
-    <div id="course-modal" class="modal fixed inset-0 z-50 bg-gray-900 bg-opacity-50 items-center justify-center backdrop-blur-sm transition-opacity">
+    <div id="courses-modal" class="modal fixed inset-0 z-50 bg-gray-900 bg-opacity-50 items-center justify-center backdrop-blur-sm transition-opacity">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all">
             <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex justify-between items-center">
-                <h3 class="text-lg font-bold text-gray-800">Add New Course</h3>
-                <button onclick="closeModal('course-modal')" class="text-gray-400 hover:text-gray-600">
-                    <i class="fas fa-times text-xl"></i>
-                </button>
+                <h3 class="text-lg font-bold text-gray-800">Add Course</h3>
+                <button onclick="closeModal('courses-modal')" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times text-xl"></i></button>
             </div>
-            <form id="course-form" onsubmit="submitCourse(event)" class="p-6 space-y-4">
-                <div id="course-form-error" class="hidden text-red-500 text-sm font-bold"></div>
+            <form id="courses-form" onsubmit="submitForm(event, 'courses')" class="p-6 space-y-4">
+                <div id="courses-form-error" class="hidden text-red-500 text-sm font-bold"></div>
+
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Course Name</label>
-                    <input type="text" id="c-name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">courseName</label>
+                    <input type="text" id="courses-courseName" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none">
                 </div>
+
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Course Code</label>
-                    <input type="text" id="c-code" required placeholder="e.g. PHY-201" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">courseCode</label>
+                    <input type="text" id="courses-courseCode" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none">
                 </div>
+
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Credits</label>
-                    <input type="number" id="c-credits" required min="1" max="6" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">credits</label>
+                    <input type="number" id="courses-credits" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none">
                 </div>
+
                 <div class="pt-4 flex justify-end space-x-3">
-                    <button type="button" onclick="closeModal('course-modal')" class="px-4 py-2 text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition-colors">Cancel</button>
-                    <button type="submit" class="px-4 py-2 text-white bg-green-600 hover:bg-green-700 rounded-lg font-medium transition-colors">Save Course</button>
+                    <button type="button" onclick="closeModal('courses-modal')" class="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg">Cancel</button>
+                    <button type="submit" class="px-4 py-2 text-white bg-brand-secondary rounded-lg">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Faculty Modal -->
+    <div id="faculty-modal" class="modal fixed inset-0 z-50 bg-gray-900 bg-opacity-50 items-center justify-center backdrop-blur-sm transition-opacity">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all">
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-gray-800">Add Faculty</h3>
+                <button onclick="closeModal('faculty-modal')" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <form id="faculty-form" onsubmit="submitForm(event, 'faculty')" class="p-6 space-y-4">
+                <div id="faculty-form-error" class="hidden text-red-500 text-sm font-bold"></div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">name</label>
+                    <input type="text" id="faculty-name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">age</label>
+                    <input type="number" id="faculty-age" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">department</label>
+                    <input type="text" id="faculty-department" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">designation</label>
+                    <input type="text" id="faculty-designation" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none">
+                </div>
+
+                <div class="pt-4 flex justify-end space-x-3">
+                    <button type="button" onclick="closeModal('faculty-modal')" class="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg">Cancel</button>
+                    <button type="submit" class="px-4 py-2 text-white bg-brand-secondary rounded-lg">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admission Modal -->
+    <div id="admissions-modal" class="modal fixed inset-0 z-50 bg-gray-900 bg-opacity-50 items-center justify-center backdrop-blur-sm transition-opacity">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all">
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-gray-800">Add Admission</h3>
+                <button onclick="closeModal('admissions-modal')" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <form id="admissions-form" onsubmit="submitForm(event, 'admissions')" class="p-6 space-y-4">
+                <div id="admissions-form-error" class="hidden text-red-500 text-sm font-bold"></div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">name</label>
+                    <input type="text" id="admissions-name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">age</label>
+                    <input type="number" id="admissions-age" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">rollNo</label>
+                    <input type="number" id="admissions-rollNo" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">semester</label>
+                    <input type="number" id="admissions-semester" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none">
+                </div>
+
+                <div class="pt-4 flex justify-end space-x-3">
+                    <button type="button" onclick="closeModal('admissions-modal')" class="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg">Cancel</button>
+                    <button type="submit" class="px-4 py-2 text-white bg-brand-secondary rounded-lg">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Attendance Modal -->
+    <div id="attendances-modal" class="modal fixed inset-0 z-50 bg-gray-900 bg-opacity-50 items-center justify-center backdrop-blur-sm transition-opacity">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all">
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-gray-800">Add Attendance</h3>
+                <button onclick="closeModal('attendances-modal')" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <form id="attendances-form" onsubmit="submitForm(event, 'attendances')" class="p-6 space-y-4">
+                <div id="attendances-form-error" class="hidden text-red-500 text-sm font-bold"></div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">roll</label>
+                    <input type="number" id="attendances-roll" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">name</label>
+                    <input type="text" id="attendances-name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">year</label>
+                    <input type="number" id="attendances-year" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">attendance</label>
+                    <input type="number" id="attendances-attendance" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none">
+                </div>
+
+                <div class="pt-4 flex justify-end space-x-3">
+                    <button type="button" onclick="closeModal('attendances-modal')" class="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg">Cancel</button>
+                    <button type="submit" class="px-4 py-2 text-white bg-brand-secondary rounded-lg">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Examination Modal -->
+    <div id="examinations-modal" class="modal fixed inset-0 z-50 bg-gray-900 bg-opacity-50 items-center justify-center backdrop-blur-sm transition-opacity">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all">
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-gray-800">Add Examination</h3>
+                <button onclick="closeModal('examinations-modal')" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <form id="examinations-form" onsubmit="submitForm(event, 'examinations')" class="p-6 space-y-4">
+                <div id="examinations-form-error" class="hidden text-red-500 text-sm font-bold"></div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">name</label>
+                    <input type="text" id="examinations-name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">roll</label>
+                    <input type="number" id="examinations-roll" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">subjects</label>
+                    <input type="text" id="examinations-subjects" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">marks</label>
+                    <input type="text" id="examinations-marks" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">examName</label>
+                    <input type="text" id="examinations-examName" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none">
+                </div>
+
+                <div class="pt-4 flex justify-end space-x-3">
+                    <button type="button" onclick="closeModal('examinations-modal')" class="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg">Cancel</button>
+                    <button type="submit" class="px-4 py-2 text-white bg-brand-secondary rounded-lg">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Review Modal -->
+    <div id="reviews-modal" class="modal fixed inset-0 z-50 bg-gray-900 bg-opacity-50 items-center justify-center backdrop-blur-sm transition-opacity">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all">
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-gray-800">Add Review</h3>
+                <button onclick="closeModal('reviews-modal')" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <form id="reviews-form" onsubmit="submitForm(event, 'reviews')" class="p-6 space-y-4">
+                <div id="reviews-form-error" class="hidden text-red-500 text-sm font-bold"></div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">name</label>
+                    <input type="text" id="reviews-name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">year</label>
+                    <input type="number" id="reviews-year" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">reviewString</label>
+                    <input type="text" id="reviews-reviewString" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none">
+                </div>
+
+                <div class="pt-4 flex justify-end space-x-3">
+                    <button type="button" onclick="closeModal('reviews-modal')" class="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg">Cancel</button>
+                    <button type="submit" class="px-4 py-2 text-white bg-brand-secondary rounded-lg">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Syllabus Modal -->
+    <div id="syllabuses-modal" class="modal fixed inset-0 z-50 bg-gray-900 bg-opacity-50 items-center justify-center backdrop-blur-sm transition-opacity">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all">
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-gray-800">Add Syllabus</h3>
+                <button onclick="closeModal('syllabuses-modal')" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <form id="syllabuses-form" onsubmit="submitForm(event, 'syllabuses')" class="p-6 space-y-4">
+                <div id="syllabuses-form-error" class="hidden text-red-500 text-sm font-bold"></div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">subjects</label>
+                    <input type="text" id="syllabuses-subjects" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none">
+                </div>
+
+                <div class="pt-4 flex justify-end space-x-3">
+                    <button type="button" onclick="closeModal('syllabuses-modal')" class="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg">Cancel</button>
+                    <button type="submit" class="px-4 py-2 text-white bg-brand-secondary rounded-lg">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Timetable Modal -->
+    <div id="timetables-modal" class="modal fixed inset-0 z-50 bg-gray-900 bg-opacity-50 items-center justify-center backdrop-blur-sm transition-opacity">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all">
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-gray-800">Add Timetable</h3>
+                <button onclick="closeModal('timetables-modal')" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <form id="timetables-form" onsubmit="submitForm(event, 'timetables')" class="p-6 space-y-4">
+                <div id="timetables-form-error" class="hidden text-red-500 text-sm font-bold"></div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">courseName</label>
+                    <input type="text" id="timetables-courseName" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">courseId</label>
+                    <input type="number" id="timetables-courseId" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">facultyName</label>
+                    <input type="text" id="timetables-facultyName" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">day</label>
+                    <input type="text" id="timetables-day" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none">
+                </div>
+
+                <div class="pt-4 flex justify-end space-x-3">
+                    <button type="button" onclick="closeModal('timetables-modal')" class="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg">Cancel</button>
+                    <button type="submit" class="px-4 py-2 text-white bg-brand-secondary rounded-lg">Save</button>
                 </div>
             </form>
         </div>
     </div>
 
     <script>
-        // API Base URL - Uses localhost:8080 to support both local file open and hosted open
         const API_BASE = window.location.protocol === 'file:' ? 'http://localhost:8080' : '';
+        let state = {};
+        
+        const config = {
+            'colleges': { endpoint: '/api/colleges', fields: ['name', 'location', 'establishedYear'], headers: ['name', 'location', 'establishedYear'] },
+            'students': { endpoint: '/api/students', fields: ['name', 'age', 'enrolledCourses'], headers: ['name', 'age', 'enrolledCourses'] },
+            'courses': { endpoint: '/api/courses', fields: ['courseName', 'courseCode', 'credits'], headers: ['courseName', 'courseCode', 'credits'] },
+            'faculty': { endpoint: '/api/faculties', fields: ['name', 'age', 'department', 'designation'], headers: ['name', 'age', 'department', 'designation'] },
+            'admissions': { endpoint: '/api/admissions', fields: ['name', 'age', 'rollNo', 'semester'], headers: ['name', 'age', 'rollNo', 'semester'] },
+            'attendances': { endpoint: '/api/attendances', fields: ['roll', 'name', 'year', 'attendance'], headers: ['roll', 'name', 'year', 'attendance'] },
+            'examinations': { endpoint: '/api/examinations', fields: ['name', 'roll', 'subjects', 'marks', 'examName'], headers: ['name', 'roll', 'subjects', 'marks', 'examName'] },
+            'reviews': { endpoint: '/api/reviews', fields: ['name', 'year', 'reviewString'], headers: ['name', 'year', 'reviewString'] },
+            'syllabuses': { endpoint: '/api/syllabuses', fields: ['subjects'], headers: ['subjects'] },
+            'timetables': { endpoint: '/api/timetables', fields: ['courseName', 'courseId', 'facultyName', 'day'], headers: ['courseName', 'courseId', 'facultyName', 'day'] },
 
-        // Data State
-        let state = {
-            students: [],
-            courses: []
-        };
-
-        // Charts Instances
-        let ageChartInstance = null;
-        let creditsChartInstance = null;
-
-        // Navigation Logic
-        const pageTitles = {
-            'dashboard': 'Overview Dashboard',
-            'students': 'Student Management',
-            'courses': 'Course Management'
         };
 
         function navigate(viewId) {
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('bg-brand-primary');
-                btn.classList.add('hover:bg-gray-800');
-            });
-            const activeBtn = document.getElementById(`nav-${viewId}`);
-            activeBtn.classList.remove('hover:bg-gray-800');
-            activeBtn.classList.add('bg-brand-primary');
-            document.getElementById('page-title').innerText = pageTitles[viewId];
-            document.querySelectorAll('.section-view').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('bg-brand-primary'));
+            document.getElementById('nav-' + viewId).classList.add('bg-brand-primary');
+            document.querySelectorAll('.section-view').forEach(s => s.classList.remove('active'));
             document.getElementById(viewId).classList.add('active');
-
-            if (viewId === 'dashboard') {
-                renderCharts();
-            }
         }
 
         function openModal(id) { document.getElementById(id).classList.add('active'); }
         function closeModal(id) { 
             document.getElementById(id).classList.remove('active'); 
-            document.getElementById('student-form-error').classList.add('hidden');
-            document.getElementById('course-form-error').classList.add('hidden');
         }
 
         async function refreshData() {
             try {
-                const [studentsRes, coursesRes] = await Promise.all([
-                    fetch(`${API_BASE}/api/students`),
-                    fetch(`${API_BASE}/api/courses`)
-                ]);
-                
-                if (studentsRes.ok && coursesRes.ok) {
-                    state.students = await studentsRes.json();
-                    state.courses = await coursesRes.json();
-                    
-                    document.getElementById('error-banner').classList.add('hidden');
-                    document.getElementById('db-status').innerText = 'Online';
-                    document.getElementById('db-status').className = 'text-2xl font-bold text-green-500';
-                    document.getElementById('connection-status').innerText = 'Connected';
-                    document.getElementById('connection-status').className = 'text-sm font-bold text-green-500';
-
-                    renderStudents();
-                    renderCourses();
-                    updateDashboardStats();
-                    renderCharts();
-                } else {
-                    throw new Error("HTTP Status Not OK");
+                for (let key in config) {
+                    const res = await fetch(`${API_BASE}${config[key].endpoint}`);
+                    if (res.ok) {
+                        state[key] = await res.json();
+                        renderTable(key);
+                    }
                 }
-            } catch (error) {
-                console.error("Failed to fetch data", error);
+                document.getElementById('db-status').innerText = 'Online';
+                document.getElementById('connection-status').innerText = 'Connected';
+            } catch (e) {
                 document.getElementById('error-banner').classList.remove('hidden');
                 document.getElementById('db-status').innerText = 'Offline';
-                document.getElementById('db-status').className = 'text-2xl font-bold text-red-500';
-                document.getElementById('connection-status').innerText = 'Disconnected';
-                document.getElementById('connection-status').className = 'text-sm font-bold text-red-500';
             }
         }
-
-        function updateDashboardStats() {
-            document.getElementById('stat-students').innerText = state.students.length;
-            document.getElementById('stat-courses').innerText = state.courses.length;
-        }
-
-        function renderCharts() {
-            // Aggregate Age Data
-            const ageCounts = {};
-            state.students.forEach(s => {
-                ageCounts[s.age] = (ageCounts[s.age] || 0) + 1;
-            });
-            const ageLabels = Object.keys(ageCounts).sort();
-            const ageData = ageLabels.map(label => ageCounts[label]);
-
-            // Render Age Chart
-            const ctxAge = document.getElementById('ageChart').getContext('2d');
-            if(ageChartInstance) ageChartInstance.destroy();
-            ageChartInstance = new Chart(ctxAge, {
-                type: 'bar',
-                data: {
-                    labels: ageLabels.map(a => a + ' yrs'),
-                    datasets: [{
-                        label: 'Number of Students',
-                        data: ageData,
-                        backgroundColor: '#3b82f6',
-                        borderRadius: 4
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
-
-            // Aggregate Credits Data
-            const creditsCounts = {};
-            state.courses.forEach(c => {
-                creditsCounts[c.credits] = (creditsCounts[c.credits] || 0) + 1;
-            });
-            const creditsLabels = Object.keys(creditsCounts).sort();
-            const creditsData = creditsLabels.map(label => creditsCounts[label]);
-
-            // Render Credits Chart
-            const ctxCredits = document.getElementById('creditsChart').getContext('2d');
-            if(creditsChartInstance) creditsChartInstance.destroy();
-            creditsChartInstance = new Chart(ctxCredits, {
-                type: 'doughnut',
-                data: {
-                    labels: creditsLabels.map(c => c + ' Credits'),
-                    datasets: [{
-                        data: creditsData,
-                        backgroundColor: ['#e67e22', '#2ecc71', '#9b59b6', '#f1c40f', '#e74c3c'],
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
-        }
-
-        function renderStudents() {
-            const tbody = document.getElementById('students-table-body');
-            const emptyState = document.getElementById('students-empty');
-            tbody.innerHTML = '';
-            if (state.students.length === 0) {
-                emptyState.classList.remove('hidden');
-            } else {
-                emptyState.classList.add('hidden');
-                state.students.forEach(student => {
-                    const row = `
-                        <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div class="h-8 w-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold mr-3">
-                                        ${student.name.charAt(0).toUpperCase()}
-                                    </div>
-                                    <div class="text-sm font-medium text-gray-900">${student.name}</div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${student.age}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                                    ${student.enrolledCourses}
-                                </span>
-                            </td>
-                        </tr>
-                    `;
-                    tbody.insertAdjacentHTML('beforeend', row);
-                });
-            }
-        }
-
-        function renderCourses() {
-            const tbody = document.getElementById('courses-table-body');
-            const emptyState = document.getElementById('courses-empty');
-            tbody.innerHTML = '';
-            if (state.courses.length === 0) {
-                emptyState.classList.remove('hidden');
-            } else {
-                emptyState.classList.add('hidden');
-                state.courses.forEach(course => {
-                    const row = `
-                        <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${course.courseName}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono">${course.courseCode}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${course.credits} Credits</td>
-                        </tr>
-                    `;
-                    tbody.insertAdjacentHTML('beforeend', row);
-                });
-            }
-        }
-
-        async function submitStudent(e) {
-            e.preventDefault();
-            const errDiv = document.getElementById('student-form-error');
-            errDiv.classList.add('hidden');
-
-            const payload = {
-                name: document.getElementById('s-name').value,
-                age: parseInt(document.getElementById('s-age').value),
-                enrolledCourses: document.getElementById('s-courses').value
-            };
-            
+        
+        async function runOp(op) {
+            const val = prompt(`Enter value for ${op}:`);
+            if(!val) return;
             try {
-                const res = await fetch(`${API_BASE}/api/students`, {
+                const res = await fetch(`${API_BASE}/api/colleges/operation`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ operation: op, value: val })
+                });
+                const txt = await res.text();
+                alert(txt);
+            } catch (err) { alert(err.message); }
+        }
+
+        function renderTable(key) {
+            const tbody = document.getElementById(key + '-table-body');
+            tbody.innerHTML = '';
+            const items = state[key] || [];
+            items.forEach(item => {
+                let row = '<tr class="hover:bg-gray-50">';
+                config[key].headers.forEach(h => {
+                    let val = item[h];
+                    if (Array.isArray(val)) val = val.join(', ');
+                    row += `<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${val}</td>`;
+                });
+                row += '</tr>';
+                tbody.insertAdjacentHTML('beforeend', row);
+            });
+        }
+
+        async function submitForm(e, key) {
+            e.preventDefault();
+            const payload = {};
+            config[key].fields.forEach(f => {
+                const el = document.getElementById(`${key}-${f}`);
+                if (el.type === 'number') payload[f] = parseFloat(el.value);
+                else if (key === 'examinations' && (f === 'subjects' || f === 'marks')) {
+                    payload[f] = el.value.split(',').map(s => s.trim());
+                    if (f === 'marks') payload[f] = payload[f].map(n => parseInt(n));
+                }
+                else if (key === 'syllabuses' && f === 'subjects') {
+                    payload[f] = el.value.split(',').map(s => s.trim());
+                }
+                else payload[f] = el.value;
+            });
+
+            try {
+                const res = await fetch(`${API_BASE}${config[key].endpoint}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
                 if (res.ok) {
                     const saved = await res.json();
-                    state.students.push(saved);
-                    renderStudents();
-                    updateDashboardStats();
-                    renderCharts();
-                    closeModal('student-modal');
+                    if (!state[key]) state[key] = [];
+                    state[key].push(saved);
+                    renderTable(key);
+                    closeModal(`${key}-modal`);
                     e.target.reset();
-                } else {
-                    const errText = await res.text();
-                    throw new Error(`Server Error (${res.status}): ${errText}`);
                 }
-            } catch (err) { 
-                errDiv.innerText = "Error: " + err.message;
-                errDiv.classList.remove('hidden');
-            }
-        }
-
-        async function submitCourse(e) {
-            e.preventDefault();
-            const errDiv = document.getElementById('course-form-error');
-            errDiv.classList.add('hidden');
-
-            const payload = {
-                courseName: document.getElementById('c-name').value,
-                courseCode: document.getElementById('c-code').value,
-                credits: parseInt(document.getElementById('c-credits').value)
-            };
-            
-            try {
-                const res = await fetch(`${API_BASE}/api/courses`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                if (res.ok) {
-                    const saved = await res.json();
-                    state.courses.push(saved);
-                    renderCourses();
-                    updateDashboardStats();
-                    renderCharts();
-                    closeModal('course-modal');
-                    e.target.reset();
-                } else {
-                    const errText = await res.text();
-                    throw new Error(`Server Error (${res.status}): ${errText}`);
-                }
-            } catch (err) { 
-                errDiv.innerText = "Error: " + err.message;
-                errDiv.classList.remove('hidden');
-            }
+            } catch (err) { alert(err.message); }
         }
 
         document.addEventListener('DOMContentLoaded', refreshData);
